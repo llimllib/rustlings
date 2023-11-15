@@ -362,7 +362,10 @@ fn watch(
                                     .iter()
                                     .filter(|e| !e.looks_done() && !filepath.ends_with(&e.path)),
                             );
-                        let num_done = exercises.iter().filter(|e| e.looks_done()).count();
+                        let num_done = exercises
+                            .iter()
+                            .filter(|e| e.looks_done() && !filepath.ends_with(&e.path))
+                            .count();
                         clear_screen();
                         match verify(
                             pending_exercises,
@@ -396,6 +399,8 @@ fn rustc_exists() -> bool {
     Command::new("rustc")
         .args(["--version"])
         .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .stdin(Stdio::null())
         .spawn()
         .and_then(|mut child| child.wait())
         .map(|status| status.success())
