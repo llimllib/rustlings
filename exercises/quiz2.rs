@@ -20,8 +20,6 @@
 //
 // No hints this time!
 
-// I AM NOT DONE
-
 pub enum Command {
     Uppercase,
     Trim,
@@ -31,12 +29,27 @@ pub enum Command {
 mod my_module {
     use super::Command;
 
+    fn cat(mut str: String, n: usize) -> String {
+        for _ in 0..n {
+            str += "bar";
+        }
+        str
+    }
+
     // TODO: Complete the function signature!
-    pub fn transformer(input: ???) -> ??? {
-        // TODO: Complete the output declaration!
-        let mut output: ??? = vec![];
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        let mut output: Vec<String> = vec![];
         for (string, command) in input.iter() {
-            // TODO: Complete the function body. You can do it!
+            let s = match command {
+                Command::Uppercase => string.to_uppercase(),
+                // or string.trim().into(), but I don't get that at all
+                Command::Trim => String::from(string.trim()),
+                // 1. string.to_owned() works, but I don't understand it
+                // 2. I don't know why I have to do *n or what that's doing - I guess it's a
+                //    pointer derefernce like C?
+                Command::Append(n) => cat(String::from(string), *n),
+            };
+            output.push(s);
         }
         output
     }
@@ -45,8 +58,8 @@ mod my_module {
 #[cfg(test)]
 mod tests {
     // TODO: What do we need to import to have `transformer` in scope?
-    use ???;
     use super::Command;
+    use crate::my_module::transformer;
 
     #[test]
     fn it_works() {
